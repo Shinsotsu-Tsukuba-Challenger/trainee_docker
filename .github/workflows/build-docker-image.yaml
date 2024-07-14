@@ -17,7 +17,7 @@ on:
 
 env:
   DOCKER-CONTEXT: ./
-  DOCKER-FILE: ./.github/Dockerfile
+  DOCKER-FILE: ./Dockerfile
   DOCKER-IMAGE: trainee 
   DOCKER-TAG: humble
 
