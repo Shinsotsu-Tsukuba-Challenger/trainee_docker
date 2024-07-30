@@ -4,7 +4,7 @@ ROS 2 Humbleでトレーニー（trainee）を開発するためのDocker Image�
 sshkeyの設定は[こちらのサイト](https://qiita.com/shizuma/items/2b2f873a0034839e47ce)を参照してください。
 
 ## Dockerの環境構築
-### 1. dockerのインストール
+### 1. Dockerのインストール
 ```
 sudo apt install docker.io
 ```
