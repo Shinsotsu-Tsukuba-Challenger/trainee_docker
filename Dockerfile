@@ -9,7 +9,8 @@ ARG USERNAME="root"
 ENV USER=$USERNAME \
     USERNAME=$USERNAME \
     GIT_PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w$(__git_ps1)\[\033[00m\](\t)\$ " \
-    NO_GIT_PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w \$ "
+    NO_GIT_PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w \$ " \
+    TRAINEE_WS=/home/$USERNAME/trainee
 
 # ユーザに関する設定
 RUN groupadd -g 1000 $USERNAME && \
@@ -32,8 +33,9 @@ RUN apt update && apt upgrade -y && \
 USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
+
 RUN --mount=type=ssh,uid=1000 source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/install.sh) && \
-  : "remove cache" && \
+    : "remove cache" && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/*
 
