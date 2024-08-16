@@ -27,6 +27,8 @@ RUN apt update && apt upgrade -y && \
     terminator \
     vim \
     wget \
+    wmctrl \
+    xdotool \
     xterm
 
 # パッケージのインストール、依存関係の解決、ワークスペースのビルド
