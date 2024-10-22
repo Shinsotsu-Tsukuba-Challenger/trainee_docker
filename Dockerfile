@@ -1,9 +1,10 @@
- FROM osrf/ros:humble-desktop-full
+FROM osrf/ros:humble-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
 # 引数
 ARG USERNAME="root"
+ARG TARGETPLATFORM
 
 # 環境変数の設定
 ENV USER=$USERNAME \
@@ -36,10 +37,21 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-RUN --mount=type=ssh,uid=1000 source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) && \
-    : "remove cache" && \
-    sudo apt-get autoremove -y -qq && \
-    sudo rm -rf /var/lib/apt/lists/*
+# アーキがamd64だったら実行
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+      --mount=type=ssh,uid=1000 source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc && \
+      : "remove cache" && \
+      sudo apt-get autoremove -y -qq && \
+      sudo rm -rf /var/lib/apt/lists/*; \
+    fi
+
+# アーキがarm64だったら実行
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+      --mount=type=ssh,uid=1000 source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) raspi && \
+      : "remove cache" && \
+      sudo apt-get autoremove -y -qq && \
+      sudo rm -rf /var/lib/apt/lists/*; \
+    fi
 
 # 設定の書き込み
 RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
