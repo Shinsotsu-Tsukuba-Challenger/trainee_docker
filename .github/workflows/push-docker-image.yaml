@@ -57,9 +57,9 @@ jobs:
           file: ${{ env.DOCKER-FILE }}
           platforms: ${{ matrix.platform }}
           tags: ${{ env.DOCKER_IMAGE_TAG }}
-          build-args: 
-            USERNAME: runner
-            QEMU_CPU: cortex-a53
+          build-args: |
+            USERNAME=runner
+            QEMU_CPU=cortex-a53
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
           push: true
