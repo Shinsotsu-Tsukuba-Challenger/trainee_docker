@@ -4,6 +4,7 @@ SHELL ["/bin/bash", "-c"]
 
 # 引数
 ARG USERNAME="root"
+ARG TARGETPLATFORM
 
 # 環境変数の設定
 ENV USER=$USERNAME \
