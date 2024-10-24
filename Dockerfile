@@ -36,7 +36,7 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-RUN --mount=type=ssh,uid=1000 source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) && \
+RUN --mount=type=ssh,uid=1000 source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc && \
     : "remove cache" && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/*
