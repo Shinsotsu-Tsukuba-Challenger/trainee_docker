@@ -56,7 +56,7 @@ jobs:
           file: ${{ env.DOCKER-FILE }}
           tags: ${{ env.DOCKER_IMAGE_TAG }}
           build-args: |
-            USERNAME=runner
+            USERNAME=ubuntu
             ROS_DISTRO=${{ matrix.tag }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
