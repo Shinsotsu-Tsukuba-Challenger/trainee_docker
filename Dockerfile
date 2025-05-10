@@ -78,4 +78,3 @@ RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
 
 WORKDIR $TRAINEE_WS
 CMD ["/bin/bash", "-c", "source ~/.bashrc && /bin/bash"]
-yy
