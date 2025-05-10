@@ -74,7 +74,8 @@ RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
     echo "else" >> $HOME/.bashrc && \
     echo "    export PS1='${NO_GIT_PS1}'" >> $HOME/.bashrc && \
     echo "fi" >> $HOME/.bashrc && \
-    bash <(curl -s https://raw.githubusercontent.com/uhobeike/ros2_humble_install_script/main/ros2_setting.sh)
+    bash <(curl -s https://raw.githubusercontent.com/uhobeike/ros2_install_script/refs/heads/main/ros2_env_setup.sh)
 
 WORKDIR $TRAINEE_WS
 CMD ["/bin/bash", "-c", "source ~/.bashrc && /bin/bash"]
+yy
