@@ -3,15 +3,29 @@ FROM osrf/ros:${ROS_DISTRO}-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
-# 引数
-ARG USERNAME="ubuntu"
-
-# 環境変数の設定
+ARG USERNAME
 ENV USER=$USERNAME \
     USERNAME=$USERNAME \
     GIT_PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w$(__git_ps1)\[\033[00m\](\t)\$ " \
     NO_GIT_PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w \$ " \
     TRAINEE_WS=/home/$USERNAME/trainee
+
+# ユーザー作成
+RUN set -eux; \
+    # 既存の UID/GID を確認し、重複があれば削除
+    if id -u $USERNAME >/dev/null 2>&1; then \
+        echo "User $USERNAME already exists. Deleting..."; \
+        deluser --remove-home $USERNAME; \
+    fi; \
+    if getent group $USERNAME >/dev/null 2>&1; then \
+        echo "Group $USERNAME already exists. Deleting..."; \
+        delgroup $USERNAME; \
+    fi; \
+    echo "Creating user: $USERNAME"; \
+    groupadd -g 1000 $USERNAME && \
+    useradd -m -s /bin/bash -u 1000 -g 1000 -d /home/$USERNAME $USERNAME && \
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 # パッケージのインストール
 RUN apt update && apt upgrade -y && \
@@ -25,10 +39,6 @@ RUN apt update && apt upgrade -y && \
     wmctrl \
     xdotool \
     xterm
-
-# ワークスペースの作成
-RUN mkdir -p $TRAINEE_WS && \
-    chown -R $USERNAME:$USERNAME $TRAINEE_WS
 
 USER $USERNAME
 
