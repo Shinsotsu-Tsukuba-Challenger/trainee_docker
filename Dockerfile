@@ -12,23 +12,24 @@ ENV USER=$USERNAME \
 
 # ユーザー作成
 RUN set -eux; \
-    if [ "$ROS_DISTRO" = "jazzy" ]; then \
-        echo "Jazzy detected. Deleting ubuntu user..."; \
-        # `ubuntu` ユーザーが存在する場合、削除
-        if id -u ubuntu >/dev/null 2>&1; then \
-            pkill -u ubuntu || true; \
-            deluser --remove-home ubuntu || true; \
-        fi; \
-        if getent group ubuntu >/dev/null 2>&1; then \
-            delgroup ubuntu || true; \
-        fi; \
+    # `ubuntu` ユーザーが存在する場合は削除
+    if id -u ubuntu >/dev/null 2>&1; then \
+        echo "Ubuntu user detected. Deleting ubuntu user..."; \
+        pkill -u ubuntu || true; \
+        deluser --remove-home ubuntu || true; \
     fi; \
-    # `runner` ユーザーが既に存在する場合、削除
+    # `ubuntu` グループが存在する場合は削除
+    if getent group ubuntu >/dev/null 2>&1; then \
+        echo "Ubuntu group detected. Deleting ubuntu group..."; \
+        delgroup ubuntu || true; \
+    fi; \
+    # `runner` ユーザーが既に存在する場合は削除
     if id -u $USERNAME >/dev/null 2>&1; then \
         echo "User $USERNAME already exists. Deleting..."; \
         deluser --remove-home $USERNAME || true; \
     fi; \
     if getent group $USERNAME >/dev/null 2>&1; then \
+        echo "Group $USERNAME already exists. Deleting..."; \
         delgroup $USERNAME || true; \
     fi; \
     # `1000:1000` が既に存在する場合の処理
@@ -77,7 +78,7 @@ RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
     echo "    export PS1='${GIT_PS1}'" >> $HOME/.bashrc && \
     echo "else" >> $HOME/.bashrc && \
     echo "    export PS1='${NO_GIT_PS1}'" >> $HOME/.bashrc && \
-    bash <(curl -s https://raw.githubusercontent.com/uhobeike/ros2_humble_install_script/main/ros2_setting.sh)
+    bash <(curl -s https://raw.githubusercontent.com/uhobeike/ros2_install_script/refs/heads/main/ros2_env_setup.sh)
 
 WORKDIR $TRAINEE_WS
 CMD ["/bin/bash"]
