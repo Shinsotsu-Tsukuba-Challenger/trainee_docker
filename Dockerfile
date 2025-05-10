@@ -3,7 +3,7 @@ FROM osrf/ros:${ROS_DISTRO}-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
-ARG USERNAME
+ARG USERNAME=runner
 ENV USER=$USERNAME \
     USERNAME=$USERNAME \
     GIT_PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w$(__git_ps1)\[\033[00m\](\t)\$ " \
@@ -12,15 +12,35 @@ ENV USER=$USERNAME \
 
 # ユーザー作成
 RUN set -eux; \
-    # 既存の UID/GID を確認し、重複があれば削除
+    if [ "$ROS_DISTRO" = "jazzy" ]; then \
+        echo "Jazzy detected. Deleting ubuntu user..."; \
+        # `ubuntu` ユーザーが存在する場合、削除
+        if id -u ubuntu >/dev/null 2>&1; then \
+            pkill -u ubuntu || true; \
+            deluser --remove-home ubuntu || true; \
+        fi; \
+        if getent group ubuntu >/dev/null 2>&1; then \
+            delgroup ubuntu || true; \
+        fi; \
+    fi; \
+    # `runner` ユーザーが既に存在する場合、削除
     if id -u $USERNAME >/dev/null 2>&1; then \
         echo "User $USERNAME already exists. Deleting..."; \
-        deluser --remove-home $USERNAME; \
+        deluser --remove-home $USERNAME || true; \
     fi; \
     if getent group $USERNAME >/dev/null 2>&1; then \
-        echo "Group $USERNAME already exists. Deleting..."; \
-        delgroup $USERNAME; \
+        delgroup $USERNAME || true; \
     fi; \
+    # `1000:1000` が既に存在する場合の処理
+    if id -u 1000 >/dev/null 2>&1; then \
+        echo "UID 1000 already exists. Reassigning..."; \
+        usermod -u 9999 $(id -un 1000) || true; \
+    fi; \
+    if getent group 1000 >/dev/null 2>&1; then \
+        echo "GID 1000 already exists. Reassigning..."; \
+        groupmod -g 9999 $(getent group 1000 | cut -d: -f1) || true; \
+    fi; \
+    # 新しい `runner` ユーザーを作成
     echo "Creating user: $USERNAME"; \
     groupadd -g 1000 $USERNAME && \
     useradd -m -s /bin/bash -u 1000 -g 1000 -d /home/$USERNAME $USERNAME && \
