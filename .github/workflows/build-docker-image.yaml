@@ -55,7 +55,9 @@ jobs:
           context: ${{ env.DOCKER-CONTEXT }}
           file: ${{ env.DOCKER-FILE }}
           tags: ${{ env.DOCKER_IMAGE_TAG }}
-          build-args: USERNAME=runner
+          build-args: |
+            USERNAME=runner
+            ROS_DISTRO=${{ matrix.tag }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
           push: false
