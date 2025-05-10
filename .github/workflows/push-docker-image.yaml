@@ -11,13 +11,15 @@ env:
   DOCKER-CONTEXT: ./
   DOCKER-FILE: ./Dockerfile
   DOCKER-IMAGE: trainee 
-  DOCKER-TAG: humble
 
 jobs:
   docker:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+
+    strategy:
+      matrix:
+        tag: [humble, jazzy]
 
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +39,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker image tag
-        run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ env.DOCKER-TAG }}" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v3
@@ -45,7 +47,9 @@ jobs:
           context: ${{ env.DOCKER-CONTEXT }}
           file: ${{ env.DOCKER-FILE }}
           tags: ${{ env.DOCKER_IMAGE_TAG }}
-          build-args: USERNAME=runner
+          build-args: |
+            USERNAME=runner
+            ROS_DISTRO=${{ matrix.tag }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
           push: true

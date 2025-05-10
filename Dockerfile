@@ -1,4 +1,5 @@
- FROM osrf/ros:humble-desktop-full
+ARG ROS_DISTRO=humble
+FROM osrf/ros:${ROS_DISTRO}-desktop-full
 
 SHELL ["/bin/bash", "-c"]
 
