@@ -66,7 +66,7 @@ RUN --mount=type=ssh,uid=1000 \
     --mount=type=cache,target=/home/$USERNAME/trainee/build,uid=1000 \
     --mount=type=cache,target=/home/$USERNAME/trainee/log,uid=1000 \
     --mount=type=cache,target=/home/$USERNAME/cache/vcs_hashes,uid=1000 \
-    source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc /cache/vcs_hashes && \
+    source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc /home/$USERNAME/cache/vcs_hashes && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/*
 
