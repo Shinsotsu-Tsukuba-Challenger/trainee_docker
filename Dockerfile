@@ -60,8 +60,9 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-# キャッシュディレクトリの作成
-RUN mkdir -p /home/$USERNAME/trainee/install \
+# リポジトリのcloneおよびキャッシュディレクトリの作成
+RUN git clone git@github.com:Shinsotsu-Tsukuba-Challenger/trainee.git $HOME/trainee && \
+    mkdir -p /home/$USERNAME/trainee/install \
              /home/$USERNAME/trainee/build \
              /home/$USERNAME/trainee/log \
              /home/$USERNAME/cache/vcs_hashes
