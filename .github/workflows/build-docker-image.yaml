@@ -46,6 +46,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cache VCS Hashes
+        uses: actions/cache@v3
+        with:
+          path: /cache/vcs_hashes
+          key: vcs-hashes-${{ matrix.tag }}-${{ hashFiles('repos/${{ matrix.tag }}/trainee.repos') }}
+          restore-keys: |
+            vcs-hashes-${{ matrix.tag }}-
+
+      - name: Cache Build Artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            /home/runner/trainee/install/
+            /home/runner/trainee/build/
+            /home/runner/trainee/log/
+          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('/cache/vcs_hashes/*.txt') }}
+          restore-keys: |
+            build-artifacts-${{ matrix.tag }}-
+
       - name: Set up Docker image tag
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
 
@@ -59,5 +78,15 @@ jobs:
             USERNAME=runner
             ROS_DISTRO=${{ matrix.tag }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
-          no-cache: true
+          cache-from: |
+            type=local,src=/home/runner/trainee/install/
+            type=local,src=/home/runner/trainee/build/
+            type=local,src=/home/runner/trainee/log/
+            type=local,src=/cache/vcs_hashes/
+          cache-to: |
+            type=local,dest=/home/runner/trainee/install/
+            type=local,dest=/home/runner/trainee/build/
+            type=local,dest=/home/runner/trainee/log/
+            type=local,dest=/cache/vcs_hashes/
+          no-cache: false
           push: false
