@@ -60,6 +60,16 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
+# Debug
+RUN --mount=type=ssh,uid=1000 \
+    --mount=type=cache,target=/home/$USERNAME/trainee/install,uid=1000 \
+    --mount=type=cache,target=/home/$USERNAME/trainee/build,uid=1000 \
+    --mount=type=cache,target=/home/$USERNAME/trainee/log,uid=1000 \
+    --mount=type=cache,target=/home/$USERNAME/cache/vcs_hashes,uid=1000 \
+    cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install
+    cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build
+    cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log
+
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
     --mount=type=cache,target=/home/$USERNAME/trainee/install,uid=1000 \
