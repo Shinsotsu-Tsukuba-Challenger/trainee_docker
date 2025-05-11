@@ -45,6 +45,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Prepare Cache Directories
+        run: |
+          mkdir -p /home/runner/trainee/install/
+          mkdir -p /home/runner/trainee/build/
+          mkdir -p /home/runner/trainee/log/
+          mkdir -p /cache/vcs_hashes/
 
       - name: Cache VCS Hashes
         uses: actions/cache@v3
