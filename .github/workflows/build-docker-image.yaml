@@ -95,5 +95,5 @@ jobs:
             type=local,dest=/home/runner/trainee/build/
             type=local,dest=/home/runner/trainee/log/
             type=local,dest=/home/runner/cache/vcs_hashes/
-          no-cache: false
+          no-cache: true
           push: false
