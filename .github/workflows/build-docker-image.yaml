@@ -46,33 +46,59 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare Directory
-        run: mkdir -p /home/runner/work/cache-demo/cache && ls /home/runner/work/cache-demo/cache 
-
-      - name: Restore Cache
-        uses: actions/cache@v3
-        id: cache-restore
-        with:
-          path: /home/runner/work/cache-demo/cache
-          key: cache-file-${{ hashFiles('test.txt') }}
-          restore-keys: |
-            cache-file-
-
-      - name: Prepare Directory
-        run: mkdir -p /home/runner/work/cache-demo/cache && ls /home/runner/work/cache-demo/cache 
-
-      - name: Check Cache
+      - name: Prepare Cache Directories
         run: |
-          if [ -f /home/runner/work/cache-demo/cache/data.txt ]; then
-            echo "Cache HIT: Found data.txt"
-            cat /home/runner/work/cache-demo/cache/data.txt
-          else
-            echo "Cache MISS: Creating data.txt"
-            echo "Build data based on test.txt" > /home/runner/work/cache-demo/cache/data.txt
-          fi
+          mkdir -p ${{ github.workspace }}/cache/install/
+          mkdir -p ${{ github.workspace }}/cache/build/
+          mkdir -p ${{ github.workspace }}/cache/log/
+          mkdir -p ${{ github.workspace }}/cache/vcs_hashes/
 
-      - name: Save Cache
+      - name: Restore Cache Build Artifacts
         uses: actions/cache@v3
         with:
-          path: /home/runner/work/cache-demo/cache
-          key: cache-file-${{ hashFiles('test.txt') }}
+          path: |
+            ${{ github.workspace }}/cache/install/
+            ${{ github.workspace }}/cache/build/
+            ${{ github.workspace }}/cache/log/
+            ${{ github.workspace }}/cache/vcs_hashes/
+          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**') }}
+          restore-keys: |
+            build-artifacts-${{ matrix.tag }}-
+
+      - name: Set up Docker image tag
+        run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ env.DOCKER-CONTEXT }}
+          file: ${{ env.DOCKER-FILE }}
+          tags: ${{ env.DOCKER_IMAGE_TAG }}
+          build-args: |
+            USERNAME=runner
+            ROS_DISTRO=${{ matrix.tag }}
+          ssh: default=${{ env.SSH_AUTH_SOCK }}
+          cache-from: |
+            type=bind,source=${{ github.workspace }}/cache/install/,target=/home/runner/trainee/install/
+            type=bind,source=${{ github.workspace }}/cache/build/,target=/home/runner/trainee/build/
+            type=bind,source=${{ github.workspace }}/cache/log/,target=/home/runner/trainee/log/
+            type=bind,source=${{ github.workspace }}/cache/vcs_hashes/,target=/home/runner/trainee/vcs_hashes/
+          cache-to: |
+            type=bind,source=${{ github.workspace }}/cache/install/,target=/home/runner/trainee/install/
+            type=bind,source=${{ github.workspace }}/cache/build/,target=/home/runner/trainee/build/
+            type=bind,source=${{ github.workspace }}/cache/log/,target=/home/runner/trainee/log/
+            type=bind,source=${{ github.workspace }}/cache/vcs_hashes/,target=/home/runner/trainee/vcs_hashes/
+          no-cache: true
+          push: false
+
+      - name: Save Cache Build Artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ github.workspace }}/cache/install/
+            ${{ github.workspace }}/cache/build/
+            ${{ github.workspace }}/cache/log/
+            ${{ github.workspace }}/cache/vcs_hashes/
+          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**') }}
+          restore-keys: |
+            build-artifacts-${{ matrix.tag }}-

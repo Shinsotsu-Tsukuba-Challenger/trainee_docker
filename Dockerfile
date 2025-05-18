@@ -60,27 +60,31 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-# # Debug
-# RUN --mount=type=ssh,uid=1000 \
-#     --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install \
-#     --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build \
-#     --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log \
-#     --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes \
-#     cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install && \
-#     cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
-#     cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log
+# コンテナ内の target ディレクトリを作成
+RUN mkdir -p /home/trainee/install \
+             /home/trainee/build \
+             /home/trainee/log \
+             /home/trainee/vcs_hashes
 
-# mkdir
-RUN mkdir -p /home/$USERNAME/trainee/install /home/$USERNAME/trainee/build /home/$USERNAME/trainee/log
+# Debug
+RUN --mount=type=ssh,uid=1000 \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/build/,target=/home/$USERNAME/trainee/build/ \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/install/,target=/home/$USERNAME/trainee/install/ \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/log/,target=/home/$USERNAME/trainee/log/ \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/ \
+    cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install && \
+    cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
+    cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log && \
+    cd /home/$USERNAME/trainee/vcs_hashes/ && ls /home/$USERNAME/trainee/vcs_hashes/
 
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install\
-    --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build \
-    --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log \
-    --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes \
-    sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee /home/$USERNAME/cache && \
-    sudo chmod -R 755 /home/$USERNAME/trainee /home/$USERNAME/cache && \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/build/,target=/home/$USERNAME//trainee/build/ \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/install/,target=/home/$USERNAME/trainee/install/ \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/log/,target=/home/$USERNAME/trainee/log/ \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/ \
+    sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
+    sudo chmod -R 755 /home/$USERNAME/trainee && \
     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc /home/$USERNAME/cache/vcs_hashes && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/*
