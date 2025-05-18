@@ -61,19 +61,19 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-    RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=$CACHE_PATH/build/,target=/home/$USERNAME/trainee/build/,readwrite \
-    --mount=type=bind,source=$CACHE_PATH/install/,target=/home/$USERNAME/trainee/install/,readwrite \
-    --mount=type=bind,source=$CACHE_PATH/log/,target=/home/$USERNAME/trainee/log/,readwrite \
-    --mount=type=bind,source=$CACHE_PATH/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/,readwrite \
-    sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
-    sudo chmod -R 755 /home/$USERNAME/trainee && \
-    echo "Writing to build cache..." >> /home/$USERNAME/trainee/build/build_log.txt && \
-    echo "Writing to install cache..." >> /home/$USERNAME/trainee/install/install_log.txt && \
-    echo "Writing to log cache..." >> /home/$USERNAME/trainee/log/log_log.txt && \
-    echo "Writing to vcs_hashes cache..." >> /home/$USERNAME/trainee/vcs_hashes/vcs_log.txt && \
-    sudo apt-get autoremove -y -qq && \
-    sudo rm -rf /var/lib/apt/lists/*
+RUN --mount=type=ssh,uid=1000 \
+--mount=type=bind,source=$CACHE_PATH/build/,target=/home/$USERNAME/trainee/build/,readwrite \
+--mount=type=bind,source=$CACHE_PATH/install/,target=/home/$USERNAME/trainee/install/,readwrite \
+--mount=type=bind,source=$CACHE_PATH/log/,target=/home/$USERNAME/trainee/log/,readwrite \
+--mount=type=bind,source=$CACHE_PATH/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/,readwrite \
+sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
+sudo chmod -R 755 /home/$USERNAME/trainee && \
+echo "Writing to build cache..." >> /home/$USERNAME/trainee/build/build_log.txt && \
+echo "Writing to install cache..." >> /home/$USERNAME/trainee/install/install_log.txt && \
+echo "Writing to log cache..." >> /home/$USERNAME/trainee/log/log_log.txt && \
+echo "Writing to vcs_hashes cache..." >> /home/$USERNAME/trainee/vcs_hashes/vcs_log.txt && \
+sudo apt-get autoremove -y -qq && \
+sudo rm -rf /var/lib/apt/lists/*
 
 
 # .bashrcの設定
