@@ -53,6 +53,37 @@ jobs:
           mkdir -p ${{ github.workspace }}/cache/log/
           mkdir -p ${{ github.workspace }}/cache/vcs_hashes/
 
+          # install ディレクトリにファイル作成
+          for i in {0..4}; do
+            echo "$i" > ${{ github.workspace }}/cache/install/file_$i.txt
+          done
+
+          # build ディレクトリにファイル作成
+          for i in {0..4}; do
+            echo "$i" > ${{ github.workspace }}/cache/build/file_$i.txt
+          done
+
+          # log ディレクトリにファイル作成
+          for i in {0..4}; do
+            echo "$i" > ${{ github.workspace }}/cache/log/file_$i.txt
+          done
+
+          # vcs_hashes ディレクトリにファイル作成
+          for i in {0..4}; do
+            echo "$i" > ${{ github.workspace }}/cache/vcs_hashes/file_$i.txt
+          done
+
+          # 確認のため出力
+          echo "=== install ==="
+          ls -la ${{ github.workspace }}/cache/install/
+          echo "=== build ==="
+          ls -la ${{ github.workspace }}/cache/build/
+          echo "=== log ==="
+          ls -la ${{ github.workspace }}/cache/log/
+          echo "=== vcs_hashes ==="
+          ls -la ${{ github.workspace }}/cache/vcs_hashes/
+
+
       - name: Restore Cache Build Artifacts
         uses: actions/cache@v3
         with:

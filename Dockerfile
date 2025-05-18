@@ -66,6 +66,9 @@ RUN mkdir -p /home/$USERNAME/trainee/install \
              /home/$USERNAME/trainee/log \
              /home/$USERNAME/trainee/vcs_hashes
 
+RUN cd /home/$USERNAME/trainee/install && ls 
+
+
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
