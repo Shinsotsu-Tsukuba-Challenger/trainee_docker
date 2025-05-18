@@ -46,54 +46,55 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare Cache Directories
+name: Simple File Cache Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Prepare Directory
+        run: mkdir -p /home/runner/work/cache-demo/cache
+
+      - name: Check Cache
         run: |
-          mkdir -p /home/runner/trainee/install/
-          mkdir -p /home/runner/trainee/build/
-          mkdir -p /home/runner/trainee/log/
-          mkdir -p /home/runner/cache/vcs_hashes/
+          if [ -f /home/runner/work/cache-demo/cache/data.txt ]; then
+            echo "Cache HIT: Found data.txt"
+            cat /home/runner/work/cache-demo/cache/data.txt
+          else
+            echo "Cache MISS: Creating data.txt"
+            echo "Build data based on test.txt" > /home/runner/work/cache-demo/cache/data.txt
+          fi
 
-      - name: Cache VCS Hashes
+      - name: Restore Cache
+        uses: actions/cache@v3
+        id: cache-restore
+        with:
+          path: /home/runner/work/cache-demo/cache
+          key: cache-file-${{ hashFiles('test.txt') }}
+          restore-keys: |
+            cache-file-
+
+      - name: Check Cache
+        run: |
+          if [ -f /home/runner/work/cache-demo/cache/data.txt ]; then
+            echo "Cache HIT: Found data.txt"
+            cat /home/runner/work/cache-demo/cache/data.txt
+          else
+            echo "Cache MISS: Creating data.txt"
+            echo "Build data based on test.txt" > /home/runner/work/cache-demo/cache/data.txt
+          fi
+
+      - name: Save Cache
         uses: actions/cache@v3
         with:
-          path: /home/runner/cache/vcs_hashes/
-          key: vcs-hashes-${{ matrix.tag }}-${{ hashFiles('repos/${{ matrix.tag }}/trainee.repos') }}
-          restore-keys: |
-            vcs-hashes-${{ matrix.tag }}-
-
-      - name: Cache Build Artifacts
-        uses: actions/cache@v3
-        with:
-          path: |
-            /home/runner/trainee/install/
-            /home/runner/trainee/build/
-            /home/runner/trainee/log/
-          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('/cache/vcs_hashes/*.txt') }}
-          restore-keys: |
-            build-artifacts-${{ matrix.tag }}-
-
-      - name: Set up Docker image tag
-        run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
-
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: ${{ env.DOCKER-CONTEXT }}
-          file: ${{ env.DOCKER-FILE }}
-          tags: ${{ env.DOCKER_IMAGE_TAG }}
-          build-args: |
-            USERNAME=runner
-            ROS_DISTRO=${{ matrix.tag }}
-          ssh: default=${{ env.SSH_AUTH_SOCK }}
-          cache-from: |
-            type=local,src=/home/runner/trainee/install/
-            type=local,src=/home/runner/trainee/build/
-            type=local,src=/home/runner/trainee/log/
-            type=local,src=/home/runner/cache/vcs_hashes/
-          cache-to: |
-            type=local,dest=/home/runner/trainee/install/
-            type=local,dest=/home/runner/trainee/build/
-            type=local,dest=/home/runner/trainee/log/
-            type=local,dest=/home/runner/cache/vcs_hashes/
-          no-cache: true
-          push: false
+          path: /home/runner/work/cache-demo/cache
+          key: cache-file-${{ hashFiles('test.txt') }}
