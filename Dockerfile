@@ -62,20 +62,20 @@ RUN mkdir -m 700 ~/.ssh && \
 
 # Debug
 RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes,uid=1000 \
+    --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install \
+    --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build \
+    --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log \
+    --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes \
     cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install && \
     cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
     cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log
 
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes,uid=1000 \
+    --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install\
+    --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build \
+    --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log \
+    --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee /home/$USERNAME/cache && \
     sudo chmod -R 755 /home/$USERNAME/trainee /home/$USERNAME/cache && \
     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc /home/$USERNAME/cache/vcs_hashes && \
