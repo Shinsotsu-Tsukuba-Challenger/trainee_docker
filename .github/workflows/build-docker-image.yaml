@@ -78,16 +78,6 @@ jobs:
             USERNAME=runner
             ROS_DISTRO=${{ matrix.tag }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
-          # cache-from: |
-          #   type=local,src=${{ github.workspace }}/cache/install/
-          #   type=local,src=${{ github.workspace }}/cache/build/
-          #   type=local,src=${{ github.workspace }}/cache/log/
-          #   type=local,src=${{ github.workspace }}/cache/vcs_hashes/
-          # cache-to: |
-          #   type=local,dest=${{ github.workspace }}/cache/install/
-          #   type=local,dest=${{ github.workspace }}/cache/build/
-          #   type=local,dest=${{ github.workspace }}/cache/log/
-          #   type=local,dest=${{ github.workspace }}/cache/vcs_hashes/
           no-cache: true
           push: false
 
