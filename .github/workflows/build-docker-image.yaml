@@ -79,15 +79,15 @@ jobs:
             ROS_DISTRO=${{ matrix.tag }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           cache-from: |
-            type=bind,source=${{ github.workspace }}/cache/install/,target=/home/runner/trainee/install/
-            type=bind,source=${{ github.workspace }}/cache/build/,target=/home/runner/trainee/build/
-            type=bind,source=${{ github.workspace }}/cache/log/,target=/home/runner/trainee/log/
-            type=bind,source=${{ github.workspace }}/cache/vcs_hashes/,target=/home/runner/trainee/vcs_hashes/
+            type=local,src=/home/runner/trainee/cache/install/
+            type=local,src=/home/runner/trainee/cache/build/
+            type=local,src=/home/runner/trainee/cache/log/
+            type=local,src=/home/runner/trainee/cache/vcs_hashes/
           cache-to: |
-            type=bind,source=${{ github.workspace }}/cache/install/,target=/home/runner/trainee/install/
-            type=bind,source=${{ github.workspace }}/cache/build/,target=/home/runner/trainee/build/
-            type=bind,source=${{ github.workspace }}/cache/log/,target=/home/runner/trainee/log/
-            type=bind,source=${{ github.workspace }}/cache/vcs_hashes/,target=/home/runner/trainee/vcs_hashes/
+            type=local,dest=/home/runner/trainee/cache/install/
+            type=local,dest=/home/runner/trainee/cache/build/
+            type=local,dest=/home/runner/trainee/cache/log/
+            type=local,dest=/home/runner/trainee/cache/vcs_hashes/
           no-cache: true
           push: false
 
