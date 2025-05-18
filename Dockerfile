@@ -76,7 +76,8 @@ RUN --mount=type=ssh,uid=1000 \
     cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
     cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log && \
     cd /home/$USERNAME/trainee/vcs_hashes/ && ls /home/$USERNAME/trainee/vcs_hashes/ && \
-    cd /home/$USERNAME/trainee/vcs_hashes/ && ls /home/$USERNAME/trainee/ 
+    cd /home/$USERNAME/trainee/vcs_hashes/ && ls /home/$USERNAME/trainee/ && \
+    cd && ls && pwd
 
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
