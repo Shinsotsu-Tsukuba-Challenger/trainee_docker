@@ -68,9 +68,6 @@ jobs:
       - name: Set up Docker image tag
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
 
-      - name: Enable BuildKit
-        run: echo "DOCKER_BUILDKIT=1" >> $GITHUB_ENV
-
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -80,6 +77,7 @@ jobs:
           build-args: |
             USERNAME=runner
             ROS_DISTRO=${{ matrix.tag }}
+            --mount 'type=volume,src=/home/runner/work/trainee_docker/trainee_docker/cache/build/,dst=/home/runner/trainee/build/,volume-driver=local'
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
           push: false
