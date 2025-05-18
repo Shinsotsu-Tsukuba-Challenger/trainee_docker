@@ -58,6 +58,9 @@ jobs:
           restore-keys: |
             cache-file-
 
+      - name: Prepare Directory
+        run: mkdir -p /home/runner/work/cache-demo/cache && ls /home/runner/work/cache-demo/cache 
+
       - name: Check Cache
         run: |
           if [ -f /home/runner/work/cache-demo/cache/data.txt ]; then
