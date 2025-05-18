@@ -11,19 +11,6 @@ ENV USER=$USERNAME \
     NO_GIT_PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w \$ " \
     TRAINEE_WS=/home/$USERNAME/trainee
 
-# # ホストのキャッシュファイルをコンテナ内にコピー
-# COPY $CACHE_PATH/build/ /home/$USERNAME/trainee/build/
-# COPY $CACHE_PATH/install/ /home/$USERNAME/trainee/install/
-# COPY $CACHE_PATH/log/ /home/$USERNAME/trainee/log/
-# COPY $CACHE_PATH/vcs_hashes/ /home/$USERNAME/trainee/vcs_hashes/
-
-# # 確認用のステップ
-# RUN ls -la /home/$USERNAME/trainee/build/
-# RUN ls -la /home/$USERNAME/trainee/install/
-# RUN ls -la /home/$USERNAME/trainee/log/
-# RUN ls -la /home/$USERNAME/trainee/vcs_hashes/
-
-
 # ユーザー作成
 RUN set -eux; \
     # `ubuntu` ユーザーが存在する場合、削除
@@ -74,29 +61,11 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-# コンテナ内の target ディレクトリを作成
-# RUN mkdir -p $CACHE_PATH/build \
-#              $CACHE_PATH/install \
-#              $CACHE_PATH/log \
-#              $CACHE_PATH/vcs_hashes
-
-# リポジトリのセットアップ
-# RUN --mount=type=ssh,uid=1000 \
-#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/build/,target=/home/$USERNAME/trainee/build/ \
-#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/install/,target=/home/$USERNAME/trainee/install/ \
-#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/log/,target=/home/$USERNAME/trainee/log/ \
-#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/ \
-#     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
-#     sudo chmod -R 755 /home/$USERNAME/trainee && \
-#     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc /home/$USERNAME/trainee/vcs_hashes/  && \
-#     sudo apt-get autoremove -y -qq && \
-#     sudo rm -rf /var/lib/apt/lists/*
-
 RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=$CACHE_PATH/build/,target=/home/$USERNAME/trainee/build/ \
-    --mount=type=bind,source=$CACHE_PATH/install/,target=/home/$USERNAME/trainee/install/ \
-    --mount=type=bind,source=$CACHE_PATH/log/,target=/home/$USERNAME/trainee/log/ \
-    --mount=type=bind,source=$CACHE_PATH/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/ \
+    --mount=type=bind,source=$CACHE_PATH/build/,target=/home/$USERNAME/trainee/build/,readwrite \
+    --mount=type=bind,source=$CACHE_PATH/install/,target=/home/$USERNAME/trainee/install/,readwrite \
+    --mount=type=bind,source=$CACHE_PATH/log/,target=/home/$USERNAME/trainee/log/,readwrite \
+    --mount=type=bind,source=$CACHE_PATH/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/,readwrite \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc /home/$USERNAME/trainee/vcs_hashes/  && \
