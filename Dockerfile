@@ -62,10 +62,10 @@ RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
 # コンテナ内の target ディレクトリを作成
-RUN mkdir -p /home/$USERNAME/trainee/install \
-             /home/$USERNAME/trainee/build \
-             /home/$USERNAME/trainee/log \
-             /home/$USERNAME/trainee/vcs_hashes
+RUN mkdir -p $CACHE_PATH/build \
+             $CACHE_PATH/install \
+             $CACHE_PATH/log \
+             $CACHE_PATH/vcs_hashes
 
 # Debug
 # RUN --mount=type=ssh,uid=1000 \
