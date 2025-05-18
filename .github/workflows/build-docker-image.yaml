@@ -16,7 +16,7 @@ on:
       - '**/*.md'
 
 env:
-  DOCKER-CONTEXT: ./
+  DOCKER-CONTEXT: ${{ runner.temp }}
   DOCKER-FILE: ./Dockerfile
   DOCKER-IMAGE: trainee 
 
