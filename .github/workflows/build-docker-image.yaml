@@ -48,50 +48,50 @@ jobs:
 
       - name: Prepare Cache Directories
         run: |
-          mkdir -p ${{ github.workspace }}/cache/install/
-          mkdir -p ${{ github.workspace }}/cache/build/
-          mkdir -p ${{ github.workspace }}/cache/log/
-          mkdir -p ${{ github.workspace }}/cache/vcs_hashes/
+          mkdir -p ${{ runner.temp }}/cache/install/
+          mkdir -p ${{ runner.temp }}/cache/build/
+          mkdir -p ${{ runner.temp }}/cache/log/
+          mkdir -p ${{ runner.temp }}/cache/vcs_hashes/
 
           # install ディレクトリにファイル作成
           for i in {0..4}; do
-            echo "$i" > ${{ github.workspace }}/cache/install/file_$i.txt
+            echo "$i" > ${{ runner.temp }}/cache/install/file_$i.txt
           done
 
           # build ディレクトリにファイル作成
           for i in {0..4}; do
-            echo "$i" > ${{ github.workspace }}/cache/build/file_$i.txt
+            echo "$i" > ${{ runner.temp }}/cache/build/file_$i.txt
           done
 
           # log ディレクトリにファイル作成
           for i in {0..4}; do
-            echo "$i" > ${{ github.workspace }}/cache/log/file_$i.txt
+            echo "$i" > ${{ runner.temp }}/cache/log/file_$i.txt
           done
 
           # vcs_hashes ディレクトリにファイル作成
           for i in {0..4}; do
-            echo "$i" > ${{ github.workspace }}/cache/vcs_hashes/file_$i.txt
+            echo "$i" > ${{ runner.temp }}/cache/vcs_hashes/file_$i.txt
           done
 
           # 確認のため出力
           echo "=== install ==="
-          ls -la ${{ github.workspace }}/cache/install/
+          ls -la ${{ runner.temp }}/cache/install/
           echo "=== build ==="
-          ls -la ${{ github.workspace }}/cache/build/
+          ls -la ${{ runner.temp }}/cache/build/
           echo "=== log ==="
-          ls -la ${{ github.workspace }}/cache/log/
+          ls -la ${{ runner.temp }}/cache/log/
           echo "=== vcs_hashes ==="
-          ls -la ${{ github.workspace }}/cache/vcs_hashes/
+          ls -la ${{ runner.temp }}/cache/vcs_hashes/
 
 
       - name: Restore Cache Build Artifacts
         uses: actions/cache@v3
         with:
           path: |
-            ${{ github.workspace }}/cache/install/
-            ${{ github.workspace }}/cache/build/
-            ${{ github.workspace }}/cache/log/
-            ${{ github.workspace }}/cache/vcs_hashes/
+            ${{ runner.temp }}/cache/install/
+            ${{ runner.temp }}/cache/build/
+            ${{ runner.temp }}/cache/log/
+            ${{ runner.temp }}/cache/vcs_hashes/
           key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
@@ -100,7 +100,7 @@ jobs:
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
 
       - name: Set Cache Path
-        run: echo "CACHE_PATH=${{ github.workspace }}/cache" >> $GITHUB_ENV
+        run: echo "CACHE_PATH=${{ runner.temp }}/cache" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v3
@@ -120,10 +120,10 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ${{ github.workspace }}/cache/install/
-            ${{ github.workspace }}/cache/build/
-            ${{ github.workspace }}/cache/log/
-            ${{ github.workspace }}/cache/vcs_hashes/
+            ${{ runner.temp }}/cache/install/
+            ${{ runner.temp }}/cache/build/
+            ${{ runner.temp }}/cache/log/
+            ${{ runner.temp }}/cache/vcs_hashes/
           key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
