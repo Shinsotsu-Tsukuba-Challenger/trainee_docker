@@ -11,17 +11,17 @@ ENV USER=$USERNAME \
     NO_GIT_PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w \$ " \
     TRAINEE_WS=/home/$USERNAME/trainee
 
-# ホストのキャッシュファイルをコンテナ内にコピー
-COPY $CACHE_PATH/build/ /home/$USERNAME/trainee/build/
-COPY $CACHE_PATH/install/ /home/$USERNAME/trainee/install/
-COPY $CACHE_PATH/log/ /home/$USERNAME/trainee/log/
-COPY $CACHE_PATH/vcs_hashes/ /home/$USERNAME/trainee/vcs_hashes/
+# # ホストのキャッシュファイルをコンテナ内にコピー
+# COPY $CACHE_PATH/build/ /home/$USERNAME/trainee/build/
+# COPY $CACHE_PATH/install/ /home/$USERNAME/trainee/install/
+# COPY $CACHE_PATH/log/ /home/$USERNAME/trainee/log/
+# COPY $CACHE_PATH/vcs_hashes/ /home/$USERNAME/trainee/vcs_hashes/
 
-# 確認用のステップ
-RUN ls -la /home/$USERNAME/trainee/build/
-RUN ls -la /home/$USERNAME/trainee/install/
-RUN ls -la /home/$USERNAME/trainee/log/
-RUN ls -la /home/$USERNAME/trainee/vcs_hashes/
+# # 確認用のステップ
+# RUN ls -la /home/$USERNAME/trainee/build/
+# RUN ls -la /home/$USERNAME/trainee/install/
+# RUN ls -la /home/$USERNAME/trainee/log/
+# RUN ls -la /home/$USERNAME/trainee/vcs_hashes/
 
 
 # ユーザー作成
