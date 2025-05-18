@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare Directory
-        run: mkdir -p /home/runner/work/cache-demo/cache && ls
+        run: mkdir -p /home/runner/work/cache-demo/cache && ls /home/runner/work/cache-demo/cache 
 
       - name: Restore Cache
         uses: actions/cache@v3
