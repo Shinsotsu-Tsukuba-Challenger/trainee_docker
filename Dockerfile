@@ -60,15 +60,15 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-# Debug
-RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install \
-    --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build \
-    --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log \
-    --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes \
-    cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install && \
-    cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
-    cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log
+# # Debug
+# RUN --mount=type=ssh,uid=1000 \
+#     --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install \
+#     --mount=type=bind,source=/home/$USERNAME/trainee/build,target=/home/$USERNAME/trainee/build \
+#     --mount=type=bind,source=/home/$USERNAME/trainee/log,target=/home/$USERNAME/trainee/log \
+#     --mount=type=bind,source=/home/$USERNAME/cache/vcs_hashes,target=/home/$USERNAME/cache/vcs_hashes \
+#     cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install && \
+#     cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
+#     cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log
 
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
