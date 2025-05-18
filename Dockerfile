@@ -79,7 +79,7 @@ RUN --mount=type=ssh,uid=1000 \
 
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/build/,target=/home/$USERNAME//trainee/build/ \
+    --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/build/,target=/home/$USERNAME/trainee/build/ \
     --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/install/,target=/home/$USERNAME/trainee/install/ \
     --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/log/,target=/home/$USERNAME/trainee/log/ \
     --mount=type=bind,source=/home/runner/work/trainee/trainee/cache/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/ \
