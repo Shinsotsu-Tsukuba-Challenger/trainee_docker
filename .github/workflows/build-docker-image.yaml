@@ -99,9 +99,10 @@ jobs:
       - name: Set up Docker image tag
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
 
+      # - name: Set Cache Path
+      #   run: echo "CACHE_PATH=${{ runner.temp }}/cache" >> $GITHUB_ENV
       - name: Set Cache Path
-        run: echo "CACHE_PATH=${{ runner.temp }}/cache" >> $GITHUB_ENV
-
+        run: echo "CACHE_PATH=cache" >> $GITHUB_ENV
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
