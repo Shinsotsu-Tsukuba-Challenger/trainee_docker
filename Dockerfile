@@ -70,6 +70,9 @@ RUN mkdir -m 700 ~/.ssh && \
 #     cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
 #     cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log
 
+# mkdir
+RUN mkdir -p /home/$USERNAME/trainee/install /home/$USERNAME/trainee/build /home/$USERNAME/trainee/log
+
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
     --mount=type=bind,source=/home/$USERNAME/trainee/install,target=/home/$USERNAME/trainee/install\
