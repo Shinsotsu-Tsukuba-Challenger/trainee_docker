@@ -45,22 +45,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-name: Simple File Cache Workflow
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
+          
       - name: Prepare Directory
         run: mkdir -p /home/runner/work/cache-demo/cache
 
