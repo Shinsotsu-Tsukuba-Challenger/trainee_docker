@@ -117,6 +117,21 @@ jobs:
           no-cache: true
           push: false
 
+      - name: Check Cache Directory After Build
+        run: |
+          echo "Checking build cache..."
+          cat ${{ github.workspace }}/cache/build/build_log.txt
+
+          echo "Checking install cache..."
+          cat ${{ github.workspace }}/cache/install/install_log.txt
+
+          echo "Checking log cache..."
+          cat ${{ github.workspace }}/cache/log/log_log.txt
+
+          echo "Checking vcs_hashes cache..."
+          cat ${{ github.workspace }}/cache/vcs_hashes/vcs_log.txt
+
+
       - name: Save Cache Build Artifacts
         uses: actions/cache@v3
         with:
