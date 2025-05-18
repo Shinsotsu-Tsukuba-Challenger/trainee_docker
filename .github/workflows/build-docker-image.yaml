@@ -16,7 +16,7 @@ on:
       - '**/*.md'
 
 env:
-  DOCKER-CONTEXT: ${{ runner.temp }}
+  DOCKER-CONTEXT: ./
   DOCKER-FILE: ./Dockerfile
   DOCKER-IMAGE: trainee 
 
@@ -106,7 +106,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ${{ env.DOCKER-CONTEXT }}
+          context: ${{ runner.temp }}
           file: ${{ env.DOCKER-FILE }}
           tags: ${{ env.DOCKER_IMAGE_TAG }}
           build-args: |
