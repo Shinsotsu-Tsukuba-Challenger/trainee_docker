@@ -67,15 +67,15 @@ RUN mkdir -p /home/trainee/install \
              /home/trainee/vcs_hashes
 
 # Debug
-RUN --mount=type=ssh,uid=1000 \
-    --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/build/,target=/home/$USERNAME/trainee/build/ \
-    --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/install/,target=/home/$USERNAME/trainee/install/ \
-    --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/log/,target=/home/$USERNAME/trainee/log/ \
-    --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/ \
-    cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install && \
-    cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
-    cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log && \
-    cd /home/$USERNAME/trainee/vcs_hashes/ && ls /home/$USERNAME/trainee/vcs_hashes/
+# RUN --mount=type=ssh,uid=1000 \
+#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/build/,target=/home/$USERNAME/trainee/build/ \
+#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/install/,target=/home/$USERNAME/trainee/install/ \
+#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/log/,target=/home/$USERNAME/trainee/log/ \
+#     --mount=type=bind,source=/home/runner/work/trainee_docker/trainee_docker/cache/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/ \
+#     cd /home/$USERNAME/trainee/install && ls /home/$USERNAME/trainee/install && \
+#     cd /home/$USERNAME/trainee/build && ls /home/$USERNAME/trainee/build && \
+#     cd /home/$USERNAME/trainee/log && ls /home/$USERNAME/trainee/log && \
+#     cd /home/$USERNAME/trainee/vcs_hashes/ && ls /home/$USERNAME/trainee/vcs_hashes/
 
 # リポジトリのセットアップ
 RUN --mount=type=ssh,uid=1000 \
