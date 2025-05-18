@@ -45,19 +45,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Prepare Directory
-        run: mkdir -p /home/runner/work/cache-demo/cache
 
-      - name: Check Cache
-        run: |
-          if [ -f /home/runner/work/cache-demo/cache/data.txt ]; then
-            echo "Cache HIT: Found data.txt"
-            cat /home/runner/work/cache-demo/cache/data.txt
-          else
-            echo "Cache MISS: Creating data.txt"
-            echo "Build data based on test.txt" > /home/runner/work/cache-demo/cache/data.txt
-          fi
+      - name: Prepare Directory
+        run: mkdir -p /home/runner/work/cache-demo/cache && ls
 
       - name: Restore Cache
         uses: actions/cache@v3
