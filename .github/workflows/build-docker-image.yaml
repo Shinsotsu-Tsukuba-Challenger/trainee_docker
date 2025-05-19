@@ -51,7 +51,6 @@ jobs:
           mkdir -p ${{ github.workspace }}/cache/install/
           mkdir -p ${{ github.workspace }}/cache/build/
           mkdir -p ${{ github.workspace }}/cache/log/
-          mkdir -p ${{ github.workspace }}/cache/vcs_hashes/
 
       - name: Restore Cache Build Artifacts
         uses: actions/cache@v3
@@ -60,7 +59,6 @@ jobs:
             ${{ github.workspace }}/cache/install/
             ${{ github.workspace }}/cache/build/
             ${{ github.workspace }}/cache/log/
-            ${{ github.workspace }}/cache/vcs_hashes/
           key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
@@ -112,7 +110,6 @@ jobs:
             ${{ github.workspace }}/cache/install/
             ${{ github.workspace }}/cache/build/
             ${{ github.workspace }}/cache/log/
-            ${{ github.workspace }}/cache/vcs_hashes/
           key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
