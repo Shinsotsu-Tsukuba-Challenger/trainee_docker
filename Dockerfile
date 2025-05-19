@@ -61,11 +61,9 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
+COPY $CACHE_PATH/ /home/$USERNAME/trainee/
+
 RUN --mount=type=ssh,uid=1000 \
-    --mount=type=volume,source=$CACHE_PATH/build/,target=/home/$USERNAME/trainee/build/,readwrite \
-    --mount=type=volume,source=$CACHE_PATH/install/,target=/home/$USERNAME/trainee/install/,readwrite \
-    --mount=type=volume,source=$CACHE_PATH/log/,target=/home/$USERNAME/trainee/log/,readwrite \
-    --mount=type=volume,source=$CACHE_PATH/vcs_hashes/,target=/home/$USERNAME/trainee/vcs_hashes/,readwrite \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc /home/$USERNAME/trainee/vcs_hashes/  && \
