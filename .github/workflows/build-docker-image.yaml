@@ -61,7 +61,7 @@ jobs:
             ${{ github.workspace }}/cache/build/
             ${{ github.workspace }}/cache/log/
             ${{ github.workspace }}/cache/vcs_hashes/
-          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**') }}
+          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
 
@@ -113,6 +113,6 @@ jobs:
             ${{ github.workspace }}/cache/build/
             ${{ github.workspace }}/cache/log/
             ${{ github.workspace }}/cache/vcs_hashes/
-          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**') }}
+          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
