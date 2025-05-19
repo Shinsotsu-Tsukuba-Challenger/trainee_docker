@@ -56,12 +56,29 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ${{ github.workspace }}/cache/install/
-            ${{ github.workspace }}/cache/build/
-            ${{ github.workspace }}/cache/log/
-          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*') }}
+            ${{ github.workspace }}/cache/install.tar.gz
+            ${{ github.workspace }}/cache/build.tar.gz
+            ${{ github.workspace }}/cache/log.tar.gz
+          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*.tar.gz') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
+
+      - name: Extract Cache Build Artifacts
+        run: |
+          mkdir -p ${{ github.workspace }}/cache/install/
+          mkdir -p ${{ github.workspace }}/cache/build/
+          mkdir -p ${{ github.workspace }}/cache/log/
+
+          tar -xzf ${{ github.workspace }}/cache/install.tar.gz -C ${{ github.workspace }}/cache/install/
+          tar -xzf ${{ github.workspace }}/cache/build.tar.gz -C ${{ github.workspace }}/cache/build/
+          tar -xzf ${{ github.workspace }}/cache/log.tar.gz -C ${{ github.workspace }}/cache/log/
+
+          echo "=== RESTORED INSTALL ==="
+          ls -la ${{ github.workspace }}/cache/install/
+          echo "=== RESTORED BUILD ==="
+          ls -la ${{ github.workspace }}/cache/build/
+          echo "=== RESTORED LOG ==="
+          ls -la ${{ github.workspace }}/cache/log/
 
       - name: Set up Docker image tag
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
@@ -103,13 +120,19 @@ jobs:
           echo "=== LOG ==="
           ls -la ${{ github.workspace }}/cache/log/
 
+      - name: Compress Cache Directories
+        run: |
+          tar -czf ${{ github.workspace }}/cache/install.tar.gz -C ${{ github.workspace }}/cache install/
+          tar -czf ${{ github.workspace }}/cache/build.tar.gz -C ${{ github.workspace }}/cache build/
+          tar -czf ${{ github.workspace }}/cache/log.tar.gz -C ${{ github.workspace }}/cache log/
+
       - name: Save Cache Build Artifacts
         uses: actions/cache@v3
         with:
           path: |
-            ${{ github.workspace }}/cache/install/
-            ${{ github.workspace }}/cache/build/
-            ${{ github.workspace }}/cache/log/
-          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*') }}
+            ${{ github.workspace }}/cache/install.tar.gz
+            ${{ github.workspace }}/cache/build.tar.gz
+            ${{ github.workspace }}/cache/log.tar.gz
+          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*.tar.gz') }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
