@@ -69,9 +69,17 @@ jobs:
           mkdir -p ${{ github.workspace }}/cache/build/
           mkdir -p ${{ github.workspace }}/cache/log/
 
-          tar -xzf ${{ github.workspace }}/cache/install.tar.gz -C ${{ github.workspace }}/cache/install/
-          tar -xzf ${{ github.workspace }}/cache/build.tar.gz -C ${{ github.workspace }}/cache/build/
-          tar -xzf ${{ github.workspace }}/cache/log.tar.gz -C ${{ github.workspace }}/cache/log/
+          if [ -f "${{ github.workspace }}/cache/install.tar.gz" ]; then
+            tar -xzf ${{ github.workspace }}/cache/install.tar.gz -C ${{ github.workspace }}/cache/install/
+          fi
+
+          if [ -f "${{ github.workspace }}/cache/build.tar.gz" ]; then
+            tar -xzf ${{ github.workspace }}/cache/build.tar.gz -C ${{ github.workspace }}/cache/build/
+          fi
+
+          if [ -f "${{ github.workspace }}/cache/log.tar.gz" ]; then
+            tar -xzf ${{ github.workspace }}/cache/log.tar.gz -C ${{ github.workspace }}/cache/log/
+          fi
 
           echo "=== RESTORED INSTALL ==="
           ls -la ${{ github.workspace }}/cache/install/
