@@ -87,7 +87,10 @@ jobs:
           ls -la ${{ github.workspace }}/cache/build/
           echo "=== RESTORED LOG ==="
           ls -la ${{ github.workspace }}/cache/log/
-          
+      - name: Debug
+        if: ${{ always() }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: Set up Docker image tag
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
 
