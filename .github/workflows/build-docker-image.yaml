@@ -112,6 +112,7 @@ jobs:
       - name: Compress and Copy Build Artifacts
         run: |
           docker run --init --rm \
+            --user $(id -u):$(id -g) \
             -v ${{ github.workspace }}/cache:/cache \
             ${{ env.DOCKER_IMAGE_TAG }} \
             bash -c "\
