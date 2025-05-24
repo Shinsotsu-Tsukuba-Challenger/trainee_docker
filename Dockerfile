@@ -67,9 +67,6 @@ RUN --mount=type=ssh,uid=1000 \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc && \
-    tar --numeric-owner -czf /home/$USERNAME/install.tar.gz -C /home/$USERNAME/trainee install && \
-    tar --numeric-owner -czf /home/$USERNAME/build.tar.gz -C /home/$USERNAME/trainee build && \
-    tar --numeric-owner -czf /home/$USERNAME/log.tar.gz -C /home/$USERNAME/trainee log && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/*
 
@@ -83,6 +80,11 @@ RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
     echo "    export PS1='${NO_GIT_PS1}'" >> $HOME/.bashrc && \
     echo "fi" >> $HOME/.bashrc && \
     bash <(curl -s https://raw.githubusercontent.com/uhobeike/ros2_install_script/refs/heads/main/ros2_env_setup.sh)
+
+RUN tar --numeric-owner -czf /home/$USERNAME/install.tar.gz -C /home/$USERNAME/trainee install && \
+    tar --numeric-owner -czf /home/$USERNAME/build.tar.gz -C /home/$USERNAME/trainee build && \
+    tar --numeric-owner -czf /home/$USERNAME/log.tar.gz -C /home/$USERNAME/trainee log
+
 
 WORKDIR $TRAINEE_WS
 CMD ["/bin/bash", "-c", "source ~/.bashrc && /bin/bash"]
