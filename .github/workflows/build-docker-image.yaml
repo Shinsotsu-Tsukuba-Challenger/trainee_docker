@@ -59,7 +59,7 @@ jobs:
             ${{ github.workspace }}/cache/install.tar.gz
             ${{ github.workspace }}/cache/build.tar.gz
             ${{ github.workspace }}/cache/log.tar.gz
-          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*.tar.gz') }}
+          key: build-artifacts-${{ matrix.tag }}-
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
 
@@ -116,6 +116,6 @@ jobs:
             ${{ github.workspace }}/cache/install.tar.gz
             ${{ github.workspace }}/cache/build.tar.gz
             ${{ github.workspace }}/cache/log.tar.gz
-          key: build-artifacts-${{ matrix.tag }}-${{ hashFiles('cache/**/*.tar.gz') }}
+          key: build-artifacts-${{ matrix.tag }}-
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
