@@ -109,17 +109,15 @@ jobs:
           push: false
           load: true
 
-      - name: Compress and Copy Build Artifacts
+      - name: Compress inside container (with timestamps)
         run: |
           docker run --init --rm \
-            --user 1001:1001 \
             -v ${{ github.workspace }}/cache:/cache \
             ${{ env.DOCKER_IMAGE_TAG }} \
             bash -c "\
-              tar -czf /cache/install.tar.gz -C /home/runner/trainee install && \
-              tar -czf /cache/build.tar.gz -C /home/runner/trainee build && \
-              tar -czf /cache/log.tar.gz -C /home/runner/trainee log"
-
+              tar --numeric-owner -czf /cache/install.tar.gz -C /home/runner/trainee install && \
+              tar --numeric-owner -czf /cache/build.tar.gz -C /home/runner/trainee build && \
+              tar --numeric-owner -czf /cache/log.tar.gz -C /home/runner/trainee log"
 
       - name: Save Cache Build Artifacts
         uses: actions/cache@v3
