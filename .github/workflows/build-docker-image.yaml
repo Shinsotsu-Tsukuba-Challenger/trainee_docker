@@ -112,7 +112,7 @@ jobs:
       - name: Create Container
         id: container
         run: |
-          CONTAINER_ID=$(docker create ${{ env.DOCKER_IMAGE_TAG }})
+          CONTAINER_ID=$(docker create --init ${{ env.DOCKER_IMAGE_TAG }})
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
           docker start $CONTAINER_ID
 
