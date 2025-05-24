@@ -118,24 +118,18 @@ jobs:
           CONTAINER_ID=$(docker create ${{ env.DOCKER_IMAGE_TAG }})
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
 
-      - name: Copy Files from Container
+      - name: Compress in Container
         run: |
-          docker cp $CONTAINER_ID:/home/runner/trainee/build/. ${{ github.workspace }}/cache/build/
-          docker cp $CONTAINER_ID:/home/runner/trainee/install/. ${{ github.workspace }}/cache/install/
-          docker cp $CONTAINER_ID:/home/runner/trainee/log/. ${{ github.workspace }}/cache/log/
+          docker exec $CONTAINER_ID bash -c "\
+            tar -czf /tmp/install.tar.gz -C /home/runner/trainee install && \
+            tar -czf /tmp/build.tar.gz -C /home/runner/trainee build && \
+            tar -czf /tmp/log.tar.gz -C /home/runner/trainee log"
 
-          echo "=== BUILD ==="
-          ls -la ${{ github.workspace }}/cache/build/
-          echo "=== INSTALL ==="
-          ls -la ${{ github.workspace }}/cache/install/
-          echo "=== LOG ==="
-          ls -la ${{ github.workspace }}/cache/log/
-
-      - name: Compress Cache Directories
+      - name: Copy Compressed Files from Container
         run: |
-          tar -czf ${{ github.workspace }}/cache/install.tar.gz -C ${{ github.workspace }}/cache install/
-          tar -czf ${{ github.workspace }}/cache/build.tar.gz -C ${{ github.workspace }}/cache build/
-          tar -czf ${{ github.workspace }}/cache/log.tar.gz -C ${{ github.workspace }}/cache log/
+          docker cp $CONTAINER_ID:/tmp/install.tar.gz ${{ github.workspace }}/cache/install.tar.gz
+          docker cp $CONTAINER_ID:/tmp/build.tar.gz ${{ github.workspace }}/cache/build.tar.gz
+          docker cp $CONTAINER_ID:/tmp/log.tar.gz ${{ github.workspace }}/cache/log.tar.gz
 
       - name: Save Cache Build Artifacts
         uses: actions/cache@v3
