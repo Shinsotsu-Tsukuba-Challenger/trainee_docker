@@ -65,9 +65,15 @@ COPY $CACHE_PATH/ /home/$USERNAME/trainee/
 
 RUN sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
-    tar --numeric-owner -xzf /home/$USERNAME/trainee/install.tar.gz -C /home/$USERNAME/trainee && \
-    tar --numeric-owner -xzf /home/$USERNAME/trainee/build.tar.gz -C /home/$USERNAME/trainee && \
-    tar --numeric-owner -xzf /home/$USERNAME/trainee/log.tar.gz -C /home/$USERNAME/trainee
+    if [ -f /home/$USERNAME/trainee/install.tar.gz ]; then \
+        tar --numeric-owner -xzf /home/$USERNAME/trainee/install.tar.gz -C /home/$USERNAME/trainee; \
+    fi && \
+    if [ -f /home/$USERNAME/trainee/build.tar.gz ]; then \
+        tar --numeric-owner -xzf /home/$USERNAME/trainee/build.tar.gz -C /home/$USERNAME/trainee; \
+    fi && \
+    if [ -f /home/$USERNAME/trainee/log.tar.gz ]; then \
+        tar --numeric-owner -xzf /home/$USERNAME/trainee/log.tar.gz -C /home/$USERNAME/trainee; \
+    fi
 
 RUN --mount=type=ssh,uid=1000 \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
