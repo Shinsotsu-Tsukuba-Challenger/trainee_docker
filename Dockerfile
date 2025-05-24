@@ -63,6 +63,11 @@ RUN mkdir -m 700 ~/.ssh && \
 
 COPY $CACHE_PATH/ /home/$USERNAME/trainee/
 
+RUN mkdir -p /home/$USERNAME/trainee && \
+    tar --numeric-owner -xzf /home/$USERNAME/trainee/install.tar.gz -C /home/$USERNAME/trainee && \
+    tar --numeric-owner -xzf /home/$USERNAME/trainee/build.tar.gz -C /home/$USERNAME/trainee && \
+    tar --numeric-owner -xzf /home/$USERNAME/trainee/log.tar.gz -C /home/$USERNAME/trainee
+
 RUN --mount=type=ssh,uid=1000 \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
