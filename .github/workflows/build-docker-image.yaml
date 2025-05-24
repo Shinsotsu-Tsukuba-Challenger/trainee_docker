@@ -109,6 +109,10 @@ jobs:
           push: false
           load: true
 
+      - name: Debug
+        if: ${{ always() }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: Compress inside container (with timestamps)
         run: |
           docker run --init --rm \
