@@ -114,6 +114,7 @@ jobs:
         run: |
           CONTAINER_ID=$(docker create ${{ env.DOCKER_IMAGE_TAG }})
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
+          docker start $CONTAINER_ID
 
       - name: Compress in Container
         run: |
