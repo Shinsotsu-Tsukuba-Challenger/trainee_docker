@@ -4,6 +4,7 @@ FROM osrf/ros:${ROS_DISTRO}-desktop-full
 SHELL ["/bin/bash", "-c"]
 
 ARG USERNAME=runner
+ARG CACHE_PATH
 ENV USER=$USERNAME \
     USERNAME=$USERNAME \
     GIT_PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w$(__git_ps1)\[\033[00m\](\t)\$ " \
@@ -60,8 +61,24 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-# リポジトリのセットアップ
-RUN --mount=type=ssh,uid=1000 source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc && \
+COPY $CACHE_PATH/ /home/$USERNAME/trainee/
+
+RUN sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
+    sudo chmod -R 755 /home/$USERNAME/trainee && \
+    if [ -f /home/$USERNAME/trainee/install.tar.gz ]; then \
+        tar --numeric-owner -xzf /home/$USERNAME/trainee/install.tar.gz -C /home/$USERNAME/trainee; \
+    fi && \
+    if [ -f /home/$USERNAME/trainee/build.tar.gz ]; then \
+        tar --numeric-owner -xzf /home/$USERNAME/trainee/build.tar.gz -C /home/$USERNAME/trainee; \
+    fi && \
+    if [ -f /home/$USERNAME/trainee/log.tar.gz ]; then \
+        tar --numeric-owner -xzf /home/$USERNAME/trainee/log.tar.gz -C /home/$USERNAME/trainee; \
+    fi
+
+RUN --mount=type=ssh,uid=1000 \
+    sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
+    sudo chmod -R 755 /home/$USERNAME/trainee && \
+    source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/*
 
@@ -75,6 +92,11 @@ RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
     echo "    export PS1='${NO_GIT_PS1}'" >> $HOME/.bashrc && \
     echo "fi" >> $HOME/.bashrc && \
     bash <(curl -s https://raw.githubusercontent.com/uhobeike/ros2_install_script/refs/heads/main/ros2_env_setup.sh)
+
+RUN tar --numeric-owner -czf /home/$USERNAME/install.tar.gz -C /home/$USERNAME/trainee install && \
+    tar --numeric-owner -czf /home/$USERNAME/build.tar.gz -C /home/$USERNAME/trainee build && \
+    tar --numeric-owner -czf /home/$USERNAME/log.tar.gz -C /home/$USERNAME/trainee log
+
 
 WORKDIR $TRAINEE_WS
 CMD ["/bin/bash", "-c", "source ~/.bashrc && /bin/bash"]
