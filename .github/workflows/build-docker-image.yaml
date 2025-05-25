@@ -105,10 +105,6 @@ jobs:
           CONTAINER_ID=$(docker create ${{ env.DOCKER_IMAGE_TAG }})
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
 
-      - name: Debug
-        if: ${{ always() }}
-        uses: mxschmitt/action-tmate@v3
-
       - name: Copy Compressed Files from Container
         run: |
           docker cp $CONTAINER_ID:/home/runner/install.tar.gz ${{ github.workspace }}/cache/install.tar.gz
