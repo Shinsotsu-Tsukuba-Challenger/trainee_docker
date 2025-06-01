@@ -11,9 +11,7 @@ ENV USER=$USERNAME \
     NO_GIT_PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w \$ " \
     TRAINEE_WS=/home/$USERNAME/trainee
 
-# ユーザー作成
 RUN set -eux; \
-    # `ubuntu` ユーザーが存在する場合、削除
     if id -u ubuntu >/dev/null 2>&1; then \
         echo "Ubuntu user detected. Deleting ubuntu user..."; \
         pkill -u ubuntu || true; \
@@ -22,27 +20,23 @@ RUN set -eux; \
     if getent group ubuntu >/dev/null 2>&1; then \
         delgroup ubuntu || true; \
     fi; \
-    # `runner` ユーザーが既に存在する場合、削除
     if id -u $USERNAME >/dev/null 2>&1; then \
         deluser --remove-home $USERNAME || true; \
     fi; \
     if getent group $USERNAME >/dev/null 2>&1; then \
         delgroup $USERNAME || true; \
     fi; \
-    # `1000:1000` が既に存在する場合の処理
     if id -u 1000 >/dev/null 2>&1; then \
         usermod -u 9999 $(id -un 1000) || true; \
     fi; \
     if getent group 1000 >/dev/null 2>&1; then \
         groupmod -g 9999 $(getent group 1000 | cut -d: -f1) || true; \
     fi; \
-    # 新しい `runner` ユーザーを作成
     groupadd -g 1000 $USERNAME && \
     useradd -m -s /bin/bash -u 1000 -g 1000 -d /home/$USERNAME $USERNAME && \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     chown -R $USERNAME:$USERNAME /home/$USERNAME
 
-# パッケージのインストール
 RUN (apt install -y curl && sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros2-latest-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros2-latest-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
     apt update) && \
@@ -60,13 +54,12 @@ RUN (apt install -y curl && sudo curl -sSL https://raw.githubusercontent.com/ros
 
 USER $USERNAME
 
-# SSH設定
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
 COPY $CACHE_PATH/ /tmp/
 
-RUN ls /tmp && mkdir -p /home/$USERNAME/trainee && \
+RUN mkdir -p /home/$USERNAME/trainee && \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     if [ -f /tmp/install.tar.gz ]; then \
@@ -93,8 +86,6 @@ RUN --mount=type=ssh,uid=1000 \
     tar --numeric-owner -czf /home/$USERNAME/log.tar.gz -C /home/$USERNAME/trainee log && \
     tar --numeric-owner -czf /home/$USERNAME/src.tar.gz -C /home/$USERNAME/trainee src
 
-
-# .bashrcの設定
 RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
     echo "if [ -f /etc/bash_completion.d/git-prompt ]; then" >> $HOME/.bashrc && \
     echo "    source /etc/bash_completion.d/git-prompt" >> $HOME/.bashrc && \
@@ -104,11 +95,6 @@ RUN echo "source /etc/bash_completion" >> $HOME/.bashrc && \
     echo "    export PS1='${NO_GIT_PS1}'" >> $HOME/.bashrc && \
     echo "fi" >> $HOME/.bashrc && \
     bash <(curl -s https://raw.githubusercontent.com/uhobeike/ros2_install_script/refs/heads/main/ros2_env_setup.sh)
-
-RUN ls -alh /home/$USERNAME/trainee/install
-RUN ls -alh /home/$USERNAME/trainee/build
-RUN ls -alh /home/$USERNAME/trainee/log
-RUN ls -alh /home/$USERNAME/trainee/src
 
 WORKDIR $TRAINEE_WS
 CMD ["/bin/bash", "-c", "source ~/.bashrc && /bin/bash"]
