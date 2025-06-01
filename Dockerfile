@@ -43,7 +43,8 @@ RUN set -eux; \
     chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 # パッケージのインストール
-RUN apt update && apt upgrade -y && \
+RUN (apt update || apt install -y curl && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && apt update ) && \
+    apt upgrade -y && \
     apt install -y \
     bash-completion \
     eog \
