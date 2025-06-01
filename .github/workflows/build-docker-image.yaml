@@ -109,3 +109,6 @@ jobs:
           key: build-artifacts-${{ matrix.tag }}-
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
+      - name: Debug
+        if: ${{ always() }}
+        uses: mxschmitt/action-tmate@v3
