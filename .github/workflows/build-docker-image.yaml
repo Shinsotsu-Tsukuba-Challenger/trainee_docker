@@ -82,7 +82,7 @@ jobs:
             CACHE_PATH=${{ env.CACHE_PATH }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
-          push: true
+          push: false
           load: true
 
       - name: Create Container
