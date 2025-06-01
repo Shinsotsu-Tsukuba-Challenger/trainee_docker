@@ -66,7 +66,7 @@ RUN mkdir -m 700 ~/.ssh && \
 
 COPY $CACHE_PATH/ /tmp/
 
-RUN mkdir -p /home/$USERNAME/trainee && \
+RUN ls /tmp && mkdir -p /home/$USERNAME/trainee && \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     if [ -f /tmp/install.tar.gz ]; then \
