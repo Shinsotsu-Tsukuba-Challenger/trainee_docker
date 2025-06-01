@@ -69,16 +69,16 @@ COPY $CACHE_PATH/ /tmp/
 RUN mkdir -p /home/$USERNAME/trainee && \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
-    if [ -f /home/$USERNAME/trainee/install.tar.gz ]; then \
+    if [ -f /tmp/install.tar.gz ]; then \
         tar --numeric-owner -xzf /tmp/install.tar.gz -C /home/$USERNAME/trainee; \
     fi && \
-    if [ -f /home/$USERNAME/trainee/build.tar.gz ]; then \
+    if [ -f /tmp/build.tar.gz ]; then \
         tar --numeric-owner -xzf /tmp/build.tar.gz -C /home/$USERNAME/trainee; \
     fi && \
-    if [ -f /home/$USERNAME/trainee/log.tar.gz ]; then \
+    if [ -f /tmp/log.tar.gz ]; then \
         tar --numeric-owner -xzf /tmp/log.tar.gz -C /home/$USERNAME/trainee; \
     fi && \
-    if [ -f /home/$USERNAME/trainee/src.tar.gz ]; then \
+    if [ -f /tmp/src.tar.gz ]; then \
         tar --numeric-owner -xzf /tmp/src.tar.gz -C /tmp; \
     fi
 
