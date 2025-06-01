@@ -64,27 +64,27 @@ USER $USERNAME
 RUN mkdir -m 700 ~/.ssh && \
     ssh-keyscan github.com > $HOME/.ssh/known_hosts
 
-COPY $CACHE_PATH/ /home/$USERNAME/trainee/
+COPY $CACHE_PATH/ /tmp/
 
 RUN sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     if [ -f /home/$USERNAME/trainee/install.tar.gz ]; then \
-        tar --numeric-owner -xzf /home/$USERNAME/trainee/install.tar.gz -C /home/$USERNAME/trainee; \
+        tar --numeric-owner -xzf /tmp/install.tar.gz -C /home/$USERNAME/trainee; \
     fi && \
     if [ -f /home/$USERNAME/trainee/build.tar.gz ]; then \
-        tar --numeric-owner -xzf /home/$USERNAME/trainee/build.tar.gz -C /home/$USERNAME/trainee; \
+        tar --numeric-owner -xzf /tmp/build.tar.gz -C /home/$USERNAME/trainee; \
     fi && \
     if [ -f /home/$USERNAME/trainee/log.tar.gz ]; then \
-        tar --numeric-owner -xzf /home/$USERNAME/trainee/log.tar.gz -C /home/$USERNAME/trainee; \
+        tar --numeric-owner -xzf /tmp/log.tar.gz -C /home/$USERNAME/trainee; \
     fi && \
     if [ -f /home/$USERNAME/trainee/src.tar.gz ]; then \
-        tar --numeric-owner -xzf /home/$USERNAME/trainee/src.tar.gz -C /home/$USERNAME/trainee; \
+        tar --numeric-owner -xzf /tmp/src.tar.gz -C /tmp; \
     fi
 
 RUN --mount=type=ssh,uid=1000 \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
-    source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc true /home/$USERNAME/trainee/src && \
+    source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc true /tmp/src && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/*
 
