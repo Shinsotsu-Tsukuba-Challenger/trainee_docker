@@ -73,7 +73,7 @@ RUN sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     fi && \
     if [ -f /home/$USERNAME/trainee/log.tar.gz ]; then \
         tar --numeric-owner -xzf /home/$USERNAME/trainee/log.tar.gz -C /home/$USERNAME/trainee; \
-    fi
+    fi && \
     if [ -f /home/$USERNAME/trainee/src.tar.gz ]; then \
         tar --numeric-owner -xzf /home/$USERNAME/trainee/src.tar.gz -C /home/$USERNAME/trainee; \
     fi
