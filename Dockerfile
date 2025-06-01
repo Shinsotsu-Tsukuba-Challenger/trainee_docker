@@ -66,7 +66,8 @@ RUN mkdir -m 700 ~/.ssh && \
 
 COPY $CACHE_PATH/ /tmp/
 
-RUN sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
+RUN mkdir -p /home/$USERNAME/trainee
+    sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     if [ -f /home/$USERNAME/trainee/install.tar.gz ]; then \
         tar --numeric-owner -xzf /tmp/install.tar.gz -C /home/$USERNAME/trainee; \
