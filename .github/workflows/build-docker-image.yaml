@@ -63,16 +63,6 @@ jobs:
           key: build-artifacts-${{ matrix.tag }}-
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
-      - name: Check contents of restored tar files
-        run: |
-          echo "Checking contents of install.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/install.tar.gz || echo "install.tar.gz is empty or invalid"
-          echo "Checking contents of build.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/build.tar.gz || echo "build.tar.gz is empty or invalid"
-          echo "Checking contents of log.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/log.tar.gz || echo "log.tar.gz is empty or invalid"
-          echo "Checking contents of src.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/src.tar.gz || echo "src.tar.gz is empty or invalid"
 
       - name: Set up Docker image tag
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
@@ -108,24 +98,6 @@ jobs:
           docker cp $CONTAINER_ID:/home/runner/log.tar.gz ${{ github.workspace }}/cache/log.tar.gz
           docker cp $CONTAINER_ID:/home/runner/src.tar.gz ${{ github.workspace }}/cache/src.tar.gz
 
-      - name: Copy Compressed Files from Container
-        run: |
-          docker cp $CONTAINER_ID:/home/runner/install.tar.gz ${{ github.workspace }}/cache/install.tar.gz
-          docker cp $CONTAINER_ID:/home/runner/build.tar.gz ${{ github.workspace }}/cache/build.tar.gz
-          docker cp $CONTAINER_ID:/home/runner/log.tar.gz ${{ github.workspace }}/cache/log.tar.gz
-          docker cp $CONTAINER_ID:/home/runner/src.tar.gz ${{ github.workspace }}/cache/src.tar.gz
-
-      - name: Check contents of tar files
-        run: |
-          echo "Checking contents of install.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/install.tar.gz || echo "install.tar.gz is empty or invalid"
-          echo "Checking contents of build.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/build.tar.gz || echo "build.tar.gz is empty or invalid"
-          echo "Checking contents of log.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/log.tar.gz || echo "log.tar.gz is empty or invalid"
-          echo "Checking contents of src.tar.gz:"
-          tar -tzf ${{ github.workspace }}/cache/src.tar.gz || echo "src.tar.gz is empty or invalid"
-
       - name: Save Cache Build Artifacts
         uses: actions/cache@v3
         with:
@@ -135,5 +107,3 @@ jobs:
             ${{ github.workspace }}/cache/log.tar.gz
             ${{ github.workspace }}/cache/src.tar.gz
           key: build-artifacts-${{ matrix.tag }}-
-          restore-keys: |
-            build-artifacts-${{ matrix.tag }}-
