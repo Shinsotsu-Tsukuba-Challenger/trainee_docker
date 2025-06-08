@@ -63,6 +63,7 @@ RUN mkdir -m 700 ~/.ssh && \
 COPY $CACHE_PATH/ /tmp/
 
 RUN mkdir -p /home/$USERNAME/trainee && \
+    mkdir /home/$USERNAME/trainee/src/unko -p && \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     if [ -f /tmp/install.tar.gz ]; then \
@@ -84,7 +85,6 @@ RUN --mount=type=ssh,uid=1000 \
     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc true /tmp/src && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/* && \
-    mkdir /home/$USERNAME/trainee/src/unko -p && \
     tar --numeric-owner -czf /home/$USERNAME/install.tar.gz -C /home/$USERNAME/trainee install && \
     tar --numeric-owner -czf /home/$USERNAME/build.tar.gz -C /home/$USERNAME/trainee build && \
     tar --numeric-owner -czf /home/$USERNAME/log.tar.gz -C /home/$USERNAME/trainee log && \
