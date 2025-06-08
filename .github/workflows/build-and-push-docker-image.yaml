@@ -53,7 +53,7 @@ jobs:
           mkdir -p ${{ github.workspace }}/cache/log/
 
       - name: Restore Cache Build Artifacts
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
         with:
           path: |
             ${{ github.workspace }}/cache/install.tar.gz
@@ -105,7 +105,7 @@ jobs:
           docker cp $CONTAINER_ID:/home/runner/src.tar.gz ${{ github.workspace }}/cache/src.tar.gz
 
       - name: Save Cache Build Artifacts
-        uses: actions/cache@v3
+        uses: actions/cache/save@v4
         with:
           path: |
             ${{ github.workspace }}/cache/install.tar.gz

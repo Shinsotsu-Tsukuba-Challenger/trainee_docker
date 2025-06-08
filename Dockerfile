@@ -63,7 +63,6 @@ RUN mkdir -m 700 ~/.ssh && \
 COPY $CACHE_PATH/ /tmp/
 
 RUN mkdir -p /home/$USERNAME/trainee && \
-    mkdir /home/$USERNAME/trainee/src/unko -p && \
     sudo chown -R $USERNAME:$USERNAME /home/$USERNAME/trainee && \
     sudo chmod -R 755 /home/$USERNAME/trainee && \
     if [ -f /tmp/install.tar.gz ]; then \
