@@ -37,12 +37,8 @@ RUN set -eux; \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     chown -R $USERNAME:$USERNAME /home/$USERNAME
 
-RUN \
-    # 既存のROS2リポジトリ設定を全部削除
-    grep -lr 'http://packages.ros.org/ros2/ubuntu' /etc/apt/sources.list /etc/apt/sources.list.d/* | xargs rm -f || true && \
-    # 署名キー削除（必要に応じて）
+RUN grep -lr 'http://packages.ros.org/ros2/ubuntu' /etc/apt/sources.list /etc/apt/sources.list.d/* | xargs rm -f || true && \
     rm -f /usr/share/keyrings/ros-archive-keyring.gpg /usr/share/keyrings/ros2-latest-archive-keyring.gpg /etc/apt/trusted.gpg.d/ros2.gpg || true && \
-    # 新規にROS2リポジトリ設定を追加
     curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" \
       | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
@@ -58,7 +54,6 @@ RUN \
       wmctrl \
       xdotool \
       xterm
-
 
 USER $USERNAME
 
@@ -89,6 +84,7 @@ RUN --mount=type=ssh,uid=1000 \
     source <(curl -s https://raw.githubusercontent.com/Shinsotsu-Tsukuba-Challenger/trainee/main/setup.sh) pc true /tmp/src && \
     sudo apt-get autoremove -y -qq && \
     sudo rm -rf /var/lib/apt/lists/* && \
+    mkdir /home/$USERNAME/trainee/src/unko -p && \
     tar --numeric-owner -czf /home/$USERNAME/install.tar.gz -C /home/$USERNAME/trainee install && \
     tar --numeric-owner -czf /home/$USERNAME/build.tar.gz -C /home/$USERNAME/trainee build && \
     tar --numeric-owner -czf /home/$USERNAME/log.tar.gz -C /home/$USERNAME/trainee log && \
