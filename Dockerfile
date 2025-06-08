@@ -37,21 +37,28 @@ RUN set -eux; \
     echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     chown -R $USERNAME:$USERNAME /home/$USERNAME
 
-RUN rm -f /etc/apt/sources.list.d/ros2.list && \
+RUN \
+    # 既存のROS2リポジトリ設定を全部削除
+    grep -lr 'http://packages.ros.org/ros2/ubuntu' /etc/apt/sources.list /etc/apt/sources.list.d/* | xargs rm -f || true && \
+    # 署名キー削除（必要に応じて）
+    rm -f /usr/share/keyrings/ros-archive-keyring.gpg /usr/share/keyrings/ros2-latest-archive-keyring.gpg /etc/apt/trusted.gpg.d/ros2.gpg || true && \
+    # 新規にROS2リポジトリ設定を追加
     curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" \
+      | tee /etc/apt/sources.list.d/ros2.list > /dev/null && \
     apt-get update && \
-    apt upgrade -y && \
-    apt install -y \
-    bash-completion \
-    eog \
-    git \
-    terminator \
-    vim \
-    wget \
-    wmctrl \
-    xdotool \
-    xterm
+    apt-get upgrade -y && \
+    apt-get install -y \
+      bash-completion \
+      eog \
+      git \
+      terminator \
+      vim \
+      wget \
+      wmctrl \
+      xdotool \
+      xterm
+
 
 USER $USERNAME
 
