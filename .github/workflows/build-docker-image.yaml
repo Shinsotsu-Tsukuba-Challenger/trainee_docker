@@ -83,11 +83,12 @@ jobs:
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
           push: false
-          load: true
+          load: false
 
       - name: Create Container
         id: container
         run: |
+          docker pull ${{ env.DOCKER_IMAGE_TAG }}
           CONTAINER_ID=$(docker create ${{ env.DOCKER_IMAGE_TAG }})
           echo "CONTAINER_ID=$CONTAINER_ID" >> $GITHUB_ENV
 
