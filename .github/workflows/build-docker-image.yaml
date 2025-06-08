@@ -1,4 +1,4 @@
-name: Build
+name: Build & Push
 
 on:
   workflow_dispatch:
@@ -82,7 +82,7 @@ jobs:
             CACHE_PATH=${{ env.CACHE_PATH }}
           ssh: default=${{ env.SSH_AUTH_SOCK }}
           no-cache: true
-          push: false
+          push: true
           load: false
 
       - name: Create Container
