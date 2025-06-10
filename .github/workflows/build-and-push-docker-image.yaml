@@ -60,9 +60,9 @@ jobs:
             ${{ github.workspace }}/cache/build.tar.gz
             ${{ github.workspace }}/cache/log.tar.gz
             ${{ github.workspace }}/cache/src.tar.gz
-          key: build-artifacts-${{ matrix.tag }}-
+          key: build-artifacts-${{ matrix.tag }}-${{ steps.date.outputs.date }}
           restore-keys: |
-            build-artifacts-${{ matrix.tag }}-1
+            build-artifacts-${{ matrix.tag }}-${{ steps.date.outputs.date }}
 
       - name: Extract src.tar.gz and list its contents
         run: |
@@ -112,4 +112,4 @@ jobs:
             ${{ github.workspace }}/cache/build.tar.gz
             ${{ github.workspace }}/cache/log.tar.gz
             ${{ github.workspace }}/cache/src.tar.gz
-          key: build-artifacts-${{ matrix.tag }}-1
+          key: build-artifacts-${{ matrix.tag }}-${{ steps.date.outputs.date }}
