@@ -68,11 +68,6 @@ jobs:
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-
 
-      - name: Extract src.tar.gz and list its contents
-        run: |
-          tar -xzvf ${{ github.workspace }}/cache/src.tar.gz -C ${{ github.workspace }}/
-          ls -l ${{ github.workspace }}/src
-
       - name: Set up Docker image tag
         run: echo "DOCKER_IMAGE_TAG=ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DOCKER-IMAGE }}:${{ matrix.tag }}" >> $GITHUB_ENV
 
