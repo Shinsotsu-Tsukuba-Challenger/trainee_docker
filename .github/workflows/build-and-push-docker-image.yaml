@@ -67,6 +67,7 @@ jobs:
           key: build-artifacts-${{ matrix.tag }}-${{ steps.date.outputs.date }}
           restore-keys: |
             build-artifacts-${{ matrix.tag }}-${{ steps.date.outputs.date }}
+            build-artifacts-${{ matrix.tag }}-
 
       - name: Extract src.tar.gz and list its contents
         run: |
